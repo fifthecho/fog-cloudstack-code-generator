@@ -1,0 +1,22 @@
+module Fog
+  module Compute
+    class Cloudstack
+
+      class Real
+
+        # <%= @description %>
+        #
+        # {CloudStack API Reference}[http://cloudstack.apache.org/docs/api/apidocs-4.3/root_admin/<%= @apicall %>.html]
+        def <%= @apicall_snake %>(options={})
+          options.merge!(
+            'command' => '<%= @apicall %>',
+           <% @params.each do |param| %> '<%= param %>' => <%= param %>, <% end %>  
+          )
+          request(options)
+        end
+      end
+      <% if @mock_template %> <%= @mock_template %> <% end %>
+    end
+  end
+end
+

@@ -1,0 +1,14 @@
+      class Mock
+        def register_template(options={})
+          mock_template_id = self.data[:images].keys.first
+          registered_template = self.data[:images][mock_template_id]
+
+          {
+              'registertemplateresponse' =>
+              {
+                  'count' => 1,
+                  'template' => [registered_template]
+              }
+          }
+        end
+      end

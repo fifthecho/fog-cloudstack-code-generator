@@ -1,0 +1,13 @@
+      class Mock
+        def list_templates(options={})
+          templates = self.data[:images].values
+
+          {
+            "listtemplatesresponse" =>
+              {
+                "count" => templates.size,
+                "template"=> templates
+              }
+          }
+        end
+      end

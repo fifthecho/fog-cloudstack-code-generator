@@ -1,0 +1,12 @@
+      class Mock
+        def list_async_jobs(options={})
+          # FIXME: support paging
+          jobs = self.data[:jobs]
+          {
+            'listasyncjobsresponse' => {
+              'count' => jobs.size,
+              'asyncjobs' => jobs
+            }
+          }
+        end
+      end
