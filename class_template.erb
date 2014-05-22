@@ -3,7 +3,6 @@ module Fog
     class Cloudstack
 
       class Real
-
         # <%= @description %>
         #
         # {CloudStack API Reference}[http://cloudstack.apache.org/docs/api/apidocs-4.3/root_admin/<%= @apicall %>.html]
@@ -15,7 +14,8 @@ module Fog
           request(options)
         end
       end
-      <% if @mock_template %> <%= @mock_template %> <% end %>
+<% if @mock_template %> 
+<%= @mock_template.read %> <% end %>
     end
   end
 end

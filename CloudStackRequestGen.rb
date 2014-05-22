@@ -68,6 +68,7 @@ def request(params)
   http.request(request)
 end
 
+# Currently this uses a CloudMonkey config, I'll move this to a fog config shortly
 configpath = ENV['HOME'] + "/.cloudmonkey/config"
 cloudmonkeyconfig = IniFile.load(configpath)
 
@@ -79,6 +80,8 @@ ssl = false
 if cloudmonkeyconfig['server']['protocol'].downcase == "https"
   ssl = true
 end
+
+
 initialize_connection(cloudstackURL, cloudstackKey, cloudstackSecret, ssl)
 requestparams = {command: 'listApis'}
 response = request(requestparams)
@@ -109,9 +112,12 @@ for api in apis
     end
   end
 
+  # If someone has written a mock, throw that in the request file.
   mockfile = mockpath + @apicall_snake + ".erb"
   if File.file?(mockfile)
-    @mock_template = ERB.new(mockfile)
+    @mock_template = File.new(mockfile, "r")
+  else
+    @mock_template = nil
   end
 
   template = ERB.new(template_file)
