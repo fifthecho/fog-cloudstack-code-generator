@@ -17,7 +17,7 @@ def initialize_connection(api_url, api_key, secret_key, use_ssl=nil)
 end
 
 def api_call_to_snakecase(name)
-  tempArray = name.split(/([a-z]*)([A-Z]*[a-z]*)?/)
+  tempArray = name.split(/([a-z0-9]*)([A-Z0-9]*[a-z0-9]*)?/)
   tempArray.delete_if { |x| x == "" }
   tempString = ""
   for element in tempArray
@@ -42,6 +42,8 @@ def api_call_to_snakecase(name)
         element = "ACL_Lists"
       when "VMPassword"
         element = "VM_Password"
+      when "F5Load"
+        element = "F5_Load"
     end
     tempString += "_" + element
   end
@@ -75,7 +77,7 @@ cloudmonkeyconfig = IniFile.load(configpath)
 cloudstackKey = cloudmonkeyconfig['user']['apikey']
 cloudstackSecret = cloudmonkeyconfig['user']['secretkey']
 cloudstackURL = cloudmonkeyconfig['server']['protocol'] + "://" + cloudmonkeyconfig['server']['host'] +
-    ":" + cloudmonkeyconfig['server']['port'] + cloudmonkeyconfig['server']['path']
+    ":" + cloudmonkeyconfig['server']['port'].to_s + cloudmonkeyconfig['server']['path']
 ssl = false
 if cloudmonkeyconfig['server']['protocol'].downcase == "https"
   ssl = true

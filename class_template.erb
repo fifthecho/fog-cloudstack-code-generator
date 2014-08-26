@@ -7,9 +7,14 @@ module Fog
         #
         # {CloudStack API Reference}[http://cloudstack.apache.org/docs/api/apidocs-4.3/root_admin/<%= @apicall %>.html]
         def <%= @apicall_snake %>(options={})
+          request(options)
+        end
+
+
+        def <%= @apicall_snake %>(<% @params.each do |param| %><%= param %>, <% end %>options={})
           options.merge!(
-            'command' => '<%= @apicall %>',
-           <% @params.each do |param| %> '<%= param %>' => <%= param %>, <% end %>  
+            'command' => '<%= @apicall %>'<% @params.each do |param| %>, 
+            '<%= param %>' => <%= param %><% end %>  
           )
           request(options)
         end
