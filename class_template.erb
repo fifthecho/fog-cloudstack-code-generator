@@ -5,17 +5,18 @@ module Fog
       class Real
         # <%= @description %>
         #
-        # {CloudStack API Reference}[http://cloudstack.apache.org/docs/api/apidocs-4.3/root_admin/<%= @apicall %>.html]
-        def <%= @apicall_snake %>(options={})
-          request(options)
-        end
-
-
-        def <%= @apicall_snake %>(<% @params.each do |param| %><%= param %>, <% end %>options={})
-          options.merge!(
-            'command' => '<%= @apicall %>'<% @params.each do |param| %>, 
-            '<%= param %>' => <%= param %><% end %>  
-          )
+        # {CloudStack API Reference}[http://cloudstack.apache.org/docs/api/apidocs-4.4/root_admin/<%= @apicall %>.html]
+        def <%= @apicall_snake %>(*args)
+          options = {}
+          if args[0].is_a? Hash
+            options = args[0]
+            options.merge!('command' => '<%= @apicall %>') <% if @params.length > 0 %>
+          else
+            options.merge!('command' => '<%= @apicall %>'<% @params.each_with_index do |param, index| %>, 
+            '<%= param %>' => args[<%= index %>]<% end %>)<% else %>
+          else
+            options.merge!('command' => '<%= @apicall %>')<% end %>
+          end
           request(options)
         end
       end

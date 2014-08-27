@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require 'inifile'
 require 'cgi'
 require 'openssl'
@@ -8,6 +9,7 @@ require 'fog/core'
 require 'fog/json'
 require 'fileutils'
 require 'erb'
+# require 'pry'
 
 def initialize_connection(api_url, api_key, secret_key, use_ssl=nil)
   @api_url    = api_url
@@ -121,6 +123,8 @@ for api in apis
   else
     @mock_template = nil
   end
+
+  #binding.pry
 
   template = ERB.new(template_file)
   filename = path + @apicall_snake + ".rb"
