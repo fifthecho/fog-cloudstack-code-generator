@@ -9,7 +9,7 @@ require 'fog/core'
 require 'fog/json'
 require 'fileutils'
 require 'erb'
-# require 'pry'
+require 'pry'
 
 def initialize_connection(api_url, api_key, secret_key, use_ssl=nil)
   @api_url    = api_url
@@ -73,15 +73,22 @@ def request(params)
 end
 
 # Currently this uses a CloudMonkey config, I'll move this to a fog config shortly
-configpath = ENV['HOME'] + "/.cloudmonkey/config"
-cloudmonkeyconfig = IniFile.load(configpath)
+# configpath = ENV['HOME'] + "/.cloudmonkey/config"
+# cloudmonkeyconfig = IniFile.load(configpath)
 
-cloudstackKey = cloudmonkeyconfig['user']['apikey']
-cloudstackSecret = cloudmonkeyconfig['user']['secretkey']
-cloudstackURL = cloudmonkeyconfig['server']['protocol'] + "://" + cloudmonkeyconfig['server']['host'] +
-    ":" + cloudmonkeyconfig['server']['port'].to_s + cloudmonkeyconfig['server']['path']
+# cloudstackKey = cloudmonkeyconfig['user']['apikey']
+# cloudstackSecret = cloudmonkeyconfig['user']['secretkey']
+# cloudstackURL = cloudmonkeyconfig['server']['protocol'] + "://" + cloudmonkeyconfig['server']['host'] +
+#     ":" + cloudmonkeyconfig['server']['port'].to_s + cloudmonkeyconfig['server']['path']
 ssl = false
-if cloudmonkeyconfig['server']['protocol'].downcase == "https"
+# if cloudmonkeyconfig['server']['protocol'].downcase == "https"
+#   ssl = true
+# end
+fogconfig = Fog::credentials
+cloudstackKey = fogconfig[:cloudstack_api_key]
+cloudstackSecret = fogconfig[:cloudstack_secret_access_key]
+cloudstackURL = fogconfig[:cloudstack_scheme] + "://" + fogconfig[:cloudstack_host] + ":" + fogconfig[:cloudstack_port].to_s + fogconfig[:cloudstack_path]
+if fogconfig[:cloudstack_scheme].downcase == "https"
   ssl = true
 end
 
@@ -116,6 +123,8 @@ for api in apis
     end
   end
 
+  # @params.sort!
+
   # If someone has written a mock, throw that in the request file.
   mockfile = mockpath + @apicall_snake + ".erb"
   if File.file?(mockfile)
@@ -124,7 +133,8 @@ for api in apis
     @mock_template = nil
   end
 
-  #binding.pry
+  @params.sort!
+  # binding.pry
 
   template = ERB.new(template_file)
   filename = path + @apicall_snake + ".rb"
